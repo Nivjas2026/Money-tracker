@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Simple personal income and expense tracker">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <title>My Money Tracker</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PERSONAL FINANCE</p>
+        <h1>My Money Tracker</h1>
+      </div>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">☾</button>
+    </header>
+
+    <main>
+      <section class="view active" id="dashboardView">
+        <div class="dashboard-date" id="dashboardDate"></div>
+        <div class="balance-card">
+          <div>
+            <span>Current Balance</span>
+            <strong id="balance">₹0</strong>
+          </div>
+          <div class="balance-meta">
+            <span id="balanceStatus">Start by adding a transaction</span>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <article class="summary income">
+            <span>Income</span><strong id="totalIncome">₹0</strong>
+          </article>
+          <article class="summary expense">
+            <span>Expenses</span><strong id="totalExpense">₹0</strong>
+          </article>
+          <article class="summary saving">
+            <span>This Month</span><strong id="monthSaving">₹0</strong>
+          </article>
+        </div>
+
+        <div class="panel accounts-panel"><div class="panel-title"><h3>Accounts</h3><p>Track balances across cash, bank, UPI and cards.</p></div><div id="accountList"></div><div class="account-form"><input id="newAccountName" type="text" maxlength="40" placeholder="e.g. HDFC Bank, Cash, UPI"><select id="newAccountType"><option>Bank</option><option>Cash</option><option>UPI</option><option>Credit Card</option><option>Other</option></select><button class="primary" id="addAccountBtn">＋ Add account</button></div></div>
+
+        <div class="panel"><div class="panel-title"><h3>Spending by category</h3><p>This month</p></div><div id="dashboardCategoryBreakdown"></div></div>
+
+        <div class="quick-actions">
+          <button class="primary" data-open-form="income">＋ Add Income</button>
+          <button class="secondary" data-open-form="expense">− Add Expense</button>
+        </div>
+
+        <div class="section-heading">
+          <div><h2>Recent transactions</h2><p>Everything you've added recently.</p></div>
+          <button class="text-btn" id="clearAllBtn">Clear all</button>
+        </div>
+        <div id="recentList" class="transaction-list"></div>
+      </section>
+
+      <section class="view" id="statsView">
+        <div class="page-heading"><h2>Statistics</h2><p>See where your money is going.</p></div>
+        <div class="segmented" id="statsPeriod">
+          <button data-period="week">Weekly</button>
+          <button class="active" data-period="month">Monthly</button>
+          <button data-period="year">Yearly</button>
+        </div>
+        <div class="stats-cards">
+          <div class="stat-box"><span>Income</span><strong id="statIncome">₹0</strong></div>
+          <div class="stat-box"><span>Expenses</span><strong id="statExpense">₹0</strong></div>
+          <div class="stat-box"><span>Net savings</span><strong id="statNet">₹0</strong></div>
+          <div class="stat-box"><span>Savings rate</span><strong id="statRate">0%</strong></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Income vs expenses</h3></div>
+          <div class="bar-chart" id="barChart"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Expense breakdown</h3></div>
+          <div id="categoryBreakdown"></div>
+        </div>
+        <div class="panel export-panel">
+          <div class="panel-title"><h3>Export report</h3><p>Download your transactions as Excel or PDF.</p></div>
+          <div class="export-grid">
+            <button class="secondary" id="exportExcel">▣ Excel report</button>
+            <button class="secondary" id="exportPdf">▤ PDF report</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="compareView">
+        <div class="page-heading"><h2>Month comparison</h2><p>Current month compared with the previous one.</p></div>
+        <div class="compare-header" id="compareLabel"></div>
+        <div class="comparison-list" id="comparisonList"></div>
+        <div class="panel">
+          <div class="panel-title"><h3>What changed?</h3></div>
+          <div id="comparisonInsight" class="insight"></div>
+        </div>
+      </section>
+
+      <section class="view" id="accountsView"><div class="page-heading"><h2>Accounts</h2><p>Manage the accounts used by your transactions.</p></div><div class="panel accounts-page-panel"><div id="accountListPage"></div></div></section>
+
+      <section class="view" id="formView">
+        <div class="page-heading">
+          <button class="back-btn" id="backBtn">← Back</button>
+          <h2 id="formTitle">Add income</h2>
+          <p>Record the details of your transaction.</p>
+        </div>
+        <form id="transactionForm" class="form-card">
+          <input type="hidden" id="editId">
+          <input type="hidden" id="type">
+          <label>Amount
+            <div class="amount-input"><span>₹</span><input id="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></div>
+          </label>
+          <label>Description
+            <input id="description" type="text" maxlength="80" placeholder="e.g. Salary, groceries, dinner..." required>
+          </label>
+          <label>Category
+            <select id="category" required></select>
+          </label>
+          <label>Account
+            <select id="accountId" required></select>
+          </label>
+          <label>Date
+            <input id="date" type="date" required>
+          </label>
+          <button class="primary full" type="submit" id="saveBtn">Save transaction</button>
+          <button class="danger full hidden" type="button" id="deleteBtn">Delete transaction</button>
+        </form>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-view="dashboardView"><span>⌂</span>Home</button>
+      <button class="nav-item" data-view="statsView"><span>◔</span>Stats</button>
+      <button class="nav-item" data-view="compareView"><span>⇄</span>Compare</button>
+      <button class="nav-item" data-view="accountsView"><span>◉</span>Accounts</button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
